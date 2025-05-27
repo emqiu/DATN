@@ -180,7 +180,9 @@ namespace TGClothes.Areas.Admin.Controllers
 
                 _orderService.Update(order);
 
-                
+                // Gửi email thông báo trạng thái đơn hàng
+                var orderDetails = _orderDetailService.GetOrderDetailByOrderId(order.Id).ToList();
+                SendOrderStatusEmail(order, orderDetails); // ← Gọi hàm gửi mail
 
                 return Json(new
                 {
@@ -234,6 +236,9 @@ namespace TGClothes.Areas.Admin.Controllers
                         order.DeliveryDate = null;
 
                     _orderService.Update(order);
+                    // ✅ Gửi email trạng thái đơn hàng
+                    var orderDetails = _orderDetailService.GetOrderDetailByOrderId(order.Id).ToList();
+                    SendOrderStatusEmail(order, orderDetails);
                 }
 
                 return Json(new { success = true });
@@ -242,6 +247,28 @@ namespace TGClothes.Areas.Admin.Controllers
             {
                 return Json(new { success = false, message = ex.Message });
             }
+        }
+
+
+        private void SendOrderStatusEmail(Order order, List<OrderDetail> orderDetails)
+        {
+            string templatePath = Server.MapPath("~/Assets/Client/template/orderstatus.html");
+            string content = System.IO.File.ReadAllText(templatePath);
+
+            content = content.Replace("{{OrderCode}}", order.OrderCode);
+            content = content.Replace("{{CustomerName}}", order.Name);
+            content = content.Replace("{{OrderStatus}}", ((OrderStatus)order.Status).GetDisplayName());
+
+            string productListHtml = "";
+            foreach (var item in orderDetails)
+            {
+                var product = _productService.GetProductById(item.ProductId); // Điều chỉnh đúng service của bạn
+                productListHtml += $"<div class='product-item'>- {product.Name} (SL: {item.Quantity})</div>";
+            }
+
+            content = content.Replace("{{ProductList}}", productListHtml);
+
+            new MailHelper().SendMail(order.Email, $"Cập nhật đơn hàng #{order.OrderCode} - {((OrderStatus)order.Status).GetDisplayName()}", content);
         }
 
 

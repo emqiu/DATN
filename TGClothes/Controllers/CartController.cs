@@ -66,6 +66,69 @@ namespace TGClothes.Controllers
             return View(cart);
         }
 
+        //public ActionResult AddToCart(CartModel model)
+        //{
+        //    var product = _productService.GetProductById(model.ProductId);
+        //    var size = _sizeService.GetSizeById(model.SizeId);
+        //    if (product == null || size == null)
+        //    {
+        //        return Json(new { success = false, message = "Sản phẩm hoặc kích cỡ không tồn tại." }, JsonRequestBehavior.AllowGet);
+        //    }
+        //    var cart = Session[CommonConstants.CART_SESSION];
+        //    if (cart != null)
+        //    {
+        //        var list = (List<CartItem>)cart;
+        //        if (list.Exists(x =>x.Product != null && x.Size != null && x.Product.Id == model.ProductId && x.Size.Id == model.SizeId))
+        //        {
+        //            foreach (var item in list)
+        //            {
+        //                var stock = _productSizeService.GetStock(item.Product.Id, item.Size.Id);
+        //                if (item.Product != null && item.Size != null && item.Product.Id == model.ProductId && item.Size.Id == model.SizeId)
+        //                {
+        //                    if (item.Quantity < stock && stock > 0)
+        //                    {
+        //                        item.Quantity += model.Quantity;
+        //                        Session[CommonConstants.CART_SESSION] = list;
+        //                        return Json(new { success = true, message = "Thêm vào giỏ hàng thành công." }, JsonRequestBehavior.AllowGet);
+        //                    }
+
+        //                    else
+        //                    {
+        //                        return Json(new { success = false, message = "Sản phẩm không được vượt quá số lượng tồn." }, JsonRequestBehavior.AllowGet);
+        //                    }
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            //tao moi doi tuong cart item
+        //            var item = new CartItem();
+        //            item.Product = product;
+        //            item.Size = size;
+        //            item.Quantity = model.Quantity;
+        //            list.Add(item);
+        //            Session[CommonConstants.CART_SESSION] = list;
+        //            return Json(new { success = true, message = "Thêm vào giỏ hàng thành công." }, JsonRequestBehavior.AllowGet);
+        //        }
+        //        //gan vao session
+        //        Session[CommonConstants.CART_SESSION] = list;
+
+        //    }
+        //    else
+        //    {
+        //        //tao moi doi tuong cart item
+        //        var item = new CartItem();
+        //        item.Product = product;
+        //        item.Size = size;
+        //        item.Quantity = model.Quantity;
+        //        var list = new List<CartItem>();
+        //        list.Add(item);
+        //        //gan vao session
+        //        Session[CommonConstants.CART_SESSION] = list;
+
+        //    }
+        //    return Json(new { success = true, message = "Thêm vào giỏ hàng thành công." }, JsonRequestBehavior.AllowGet);
+        //}
         public ActionResult AddToCart(CartModel model)
         {
             var product = _productService.GetProductById(model.ProductId);
@@ -126,7 +189,7 @@ namespace TGClothes.Controllers
             return Json(new { success = true, message = "Thêm vào giỏ hàng thành công." }, JsonRequestBehavior.AllowGet);
         }
 
-  
+
 
         public JsonResult Update(string cartModel)
         {
@@ -272,7 +335,7 @@ namespace TGClothes.Controllers
 
                 _orderDetailService.Insert(orderDetail);
             }
-            
+            var orderDetailss = _orderDetailService.GetOrderDetailByOrderId(order.Id).ToList();
             string content = System.IO.File.ReadAllText(Server.MapPath("~/Assets/Client/template/neworder.html"));        
             content = content.Replace("{{CustomerName}}", model.Name);
             content = content.Replace("{{Phone}}", model.Phone);
@@ -281,7 +344,15 @@ namespace TGClothes.Controllers
             content = content.Replace("{{Total}}", (Total() + model.ShippingFee).ToString("N0") + " VNĐ");
             content = content.Replace("{{OrderCode}}", order.OrderCode);
 
-            
+            string productListHtml = "";
+            foreach (var item in orderDetailss)
+            {
+                var product = _productService.GetProductById(item.ProductId); // Điều chỉnh đúng service của bạn
+                productListHtml += $"<div class='product-item'>- {product.Name} (SL: {item.Quantity})</div>";
+            }
+
+            content = content.Replace("{{ProductList}}", productListHtml);
+
             new MailHelper().SendMail(model.Email, "Đơn hàng mới từ VibeFashion", content);
 
 
@@ -361,6 +432,7 @@ namespace TGClothes.Controllers
             
             string paymentUrl = pay.CreateRequestUrl(url, hashSecret);
 
+            var orderDetailss = _orderDetailService.GetOrderDetailByOrderId(order.Id).ToList();
             string content = System.IO.File.ReadAllText(Server.MapPath("~/Assets/Client/template/neworder.html"));
             content = content.Replace("{{CustomerName}}", model.Name);
             content = content.Replace("{{Phone}}", model.Phone);
@@ -368,6 +440,16 @@ namespace TGClothes.Controllers
             content = content.Replace("{{Address}}", model.Province);
             content = content.Replace("{{Total}}", (Total() + model.ShippingFee).ToString("N0") + "VND");
             content = content.Replace("{{OrderCode}}", order.OrderCode);
+
+            string productListHtml = "";
+            foreach (var item in orderDetailss)
+            {
+                var product = _productService.GetProductById(item.ProductId); // Điều chỉnh đúng service của bạn
+                productListHtml += $"<div class='product-item'>- {product.Name} (SL: {item.Quantity})</div>";
+            }
+
+            content = content.Replace("{{ProductList}}", productListHtml);
+
 
             new MailHelper().SendMail(model.Email, "Đơn hàng mới từ VibeFashion (Đã thanh toán qua VnPay)", content);
             return Redirect(paymentUrl);

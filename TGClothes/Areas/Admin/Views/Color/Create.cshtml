@@ -1,0 +1,25 @@
+﻿@model Data.EF.Color
+@{
+    ViewBag.Title = "Thêm màu mới";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@section header {
+    Thêm màu mới  của sản phẩm
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-group">
+        @Html.LabelFor(m => m.Name)
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Name)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.CodeColor)
+        @Html.TextBoxFor(m => m.CodeColor, new { @class = "form-control", type = "color", style = "width: 70px;" })
+        @Html.ValidationMessageFor(m => m.CodeColor)
+    </div>
+    <button type="submit" class="btn btn-success">Lưu</button>
+    @Html.ActionLink("Quay lại", "Index", null, new { @class = "btn btn-danger" })
+}

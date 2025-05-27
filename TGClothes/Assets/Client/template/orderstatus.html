@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .email-wrapper { padding: 20px; background-color: #f9f9f9; }
+        .email-header { font-size: 18px; font-weight: bold; color: #333; }
+        .email-body { margin-top: 15px; }
+        .product-item { margin-left: 20px; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="email-wrapper">
+        <div class="email-header">Cập nhật trạng thái đơn hàng</div>
+        <div class="email-body">
+            <p>Xin chào <strong>{{CustomerName}}</strong>,</p>
+            <p>Đơn hàng <strong>#{{OrderCode}}</strong> của bạn đã được cập nhật trạng thái mới:</p>
+            <p><strong>{{OrderStatus}}</strong></p>
+            <p>Danh sách sản phẩm:</p>
+            <div>
+                {{ProductList}}
+            </div>
+            <p>Trân trọng,<br>VibeFashion</p>
+        </div>
+    </div>
+</body>
+</html>

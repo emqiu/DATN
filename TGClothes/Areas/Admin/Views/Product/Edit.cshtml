@@ -168,7 +168,7 @@
 
             <label name="ProductSizes[@Model.Sizes.IndexOf(size)].SizeId">@size.Name</label>
             <input type="number" name="ProductSizes[@Model.Sizes.IndexOf(size)].SizeId" value="@size.Id" hidden />
-            <input type="number" name="ProductSizes[@Model.Sizes.IndexOf(size)].Stock" value="@(hasProductSize ? productSize.Stock : 0)" />
+            <input type="number" name="ProductSizes[@Model.Sizes.IndexOf(size)].Stock" value="@(hasProductSize ? productSize.Stock : 0)" min="0" />
         }
     </div>
 

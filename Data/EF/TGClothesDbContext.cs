@@ -14,12 +14,12 @@ namespace Data.EF
 
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Color> Colors { get; set; }
         public virtual DbSet<Content> Contents { get; set; }
         public virtual DbSet<ContentTag> ContentTags { get; set; }
         public virtual DbSet<Feedback> Feedbacks { get; set; }
         public virtual DbSet<Gallery> Galleries { get; set; }
         public virtual DbSet<Menu> Menus { get; set; }
-        public virtual DbSet<Message> Messages { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<Product> Products { get; set; }
@@ -69,13 +69,7 @@ namespace Data.EF
                 .Property(e => e.Id)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<Message>()
-                .Property(e => e.Sender)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<Message>()
-                .Property(e => e.Receiver)
-                .IsUnicode(false);
+           
 
         }
     }

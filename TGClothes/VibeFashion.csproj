@@ -586,6 +586,7 @@
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\BaseController.cs" />
     <Compile Include="Areas\Admin\Controllers\CategoryController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ColorController.cs" />
     <Compile Include="Areas\Admin\Controllers\ContentController.cs" />
     <Compile Include="Areas\Admin\Controllers\FeedbackController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
@@ -3428,6 +3429,7 @@
     <Content Include="Assets\Client\js\map-custom.js" />
     <Content Include="Assets\Client\js\slick-custom.js" />
     <Content Include="Assets\Client\template\neworder.html" />
+    <Content Include="Assets\Client\template\orderstatus.html" />
     <Content Include="Assets\Client\vendor\animate\animate.css" />
     <Content Include="Assets\Client\vendor\animsition\css\animsition.css" />
     <Content Include="Assets\Client\vendor\animsition\css\animsition.min.css" />
@@ -4314,6 +4316,9 @@
     <Content Include="Assets\Admin\HM\HM Sans Latin SemiBold.ttf" />
     <Content Include="Areas\Admin\Views\Feedback\Index.cshtml" />
     <Content Include="Assets\Client\js\provinces-api.json" />
+    <Content Include="Areas\Admin\Views\Color\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Color\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Color\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\tuna132-001-site1 - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\tuna132-001-site1 - FTP1.pubxml" />
     <None Include="Properties\PublishProfiles\tuna132-001-site1 - FTP2.pubxml" />
